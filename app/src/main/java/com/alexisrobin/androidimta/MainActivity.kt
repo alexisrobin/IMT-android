@@ -48,6 +48,12 @@ class MainActivity : AppCompatActivity(), BookListFragment.OnBookClickedListener
     }
 
     override fun onClick(book: Book?) {
-
+        val bookDetailFragment = BookDetailFragment()
+        val arguments = Bundle()
+        arguments.putParcelable("book", book)
+        bookDetailFragment.arguments = arguments
+        supportFragmentManager.beginTransaction()
+                .replace(R.id.containerFrameLayout, bookDetailFragment, BookDetailFragment::class.java.simpleName)
+                .commit()
     }
 }

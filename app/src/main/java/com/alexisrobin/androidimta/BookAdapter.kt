@@ -3,6 +3,7 @@ package com.alexisrobin.androidimta
 /**
  * Created by alexis on 16/11/2017.
  */
+import android.content.DialogInterface
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -22,8 +23,10 @@ class BookAdapter(val inflater: LayoutInflater, val books: List<Book>): Recycler
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder =
-            MyViewHolder(inflater.inflate(R.layout.custom_view_item_book, parent, false));
+    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
+        val itemView = inflater.inflate(R.layout.custom_view_item_book, parent, false);
+        return MyViewHolder(itemView)
+    }
 
     override fun getItemCount(): Int = books.size
 
