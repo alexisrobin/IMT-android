@@ -4,6 +4,7 @@ package com.alexisrobin.androidimta
 import android.os.Parcelable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 
 import java.util.ArrayList
 
@@ -12,8 +13,9 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.logging.Logger
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), BookListFragment.OnBookClickedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +30,7 @@ class MainActivity : AppCompatActivity() {
 
         henriPotierService.books().enqueue(object : Callback<List<Book>> {
             override fun onResponse(call: Call<List<Book>>, response: Response<List<Book>>) {
-
+                Log.v("TAG", "ok")
                 val bookListFragment = BookListFragment()
                 val arguments = Bundle()
                 arguments.putParcelableArrayList("books", response.body() as ArrayList<out Parcelable>?)
@@ -39,9 +41,13 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<List<Book>>, t: Throwable) {
-
+                Log.v("TAG", "error")
             }
         })
+
+    }
+
+    override fun onClick(book: Book?) {
 
     }
 }

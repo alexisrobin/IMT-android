@@ -6,7 +6,9 @@ import android.os.Parcelable
 /**
  * Created by alexis on 16/11/2017.
  */
-data class Book(val title: String? = null, val price: Int? = null, val cover: String? = null) : Parcelable {
+data class Book(val title: String? = null,
+                val price: Int? = null,
+                val cover: String? = null) : Parcelable {
     constructor(parcel: Parcel) : this(
             parcel.readString(),
             parcel.readValue(Int::class.java.classLoader) as? Int,

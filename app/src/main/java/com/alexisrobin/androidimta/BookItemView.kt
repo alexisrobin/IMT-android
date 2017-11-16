@@ -3,6 +3,7 @@ package com.alexisrobin.androidimta
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.LinearLayout
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.custom_view_item_book.view.*
 
 /**
@@ -15,8 +16,10 @@ class BookItemView: LinearLayout {
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     fun bindView(book: Book) {
-        nameTextView.text = book.title
-        priceTextView.text = book.price.toString()
+        titleTextView.text = book.title
+        Glide.with(context)
+                .load(book.cover)
+                .into(coverImageView);
     }
 
 }
