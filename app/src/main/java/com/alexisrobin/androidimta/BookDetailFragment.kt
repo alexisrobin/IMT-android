@@ -25,10 +25,18 @@ class BookDetailFragment : Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val book: Book = arguments.getParcelable("book")!!
-        titleTextView.text = book.title
-        Glide.with(context)
-                .load(book.cover)
-                .into(coverImageView);
+        if(arguments.getBoolean("selected")) {
+            val book: Book = arguments.getParcelable("book")!!
+            titleTextView.text = book.title
+            priceTextView.text = "Price: " + book.price.toString() + "£"
+            isbnTextView.text = "ISBN: " + book.isbn
+            synopsisTextView.text = book.synopsis.toString()
+            Glide.with(context)
+                    .load(book.cover)
+                    .into(coverImageView);
+
+        } else {
+            titleTextView.text = "Select a book !"
+        }
     }
 }

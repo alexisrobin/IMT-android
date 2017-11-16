@@ -1,59 +1,60 @@
 package com.alexisrobin.androidimta
 
 
-import android.os.Parcelable
+import android.content.res.Configuration
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 
-import java.util.ArrayList
-
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import java.util.logging.Logger
-
+/**
+ * Created by alexis on 16/11/2017.
+ */
 class MainActivity : AppCompatActivity(), BookListFragment.OnBookClickedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        val retrofit = Retrofit.Builder()
-                .baseUrl("http://henri-potier.xebia.fr")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-
-        val henriPotierService = retrofit.create(HenriPotierService::class.java)
-
-        henriPotierService.books().enqueue(object : Callback<List<Book>> {
-            override fun onResponse(call: Call<List<Book>>, response: Response<List<Book>>) {
-                Log.v("TAG", "ok")
-                val bookListFragment = BookListFragment()
-                val arguments = Bundle()
-                arguments.putParcelableArrayList("books", response.body() as ArrayList<out Parcelable>?)
-                bookListFragment.arguments = arguments
+        when(resources.configuration.orientation) {
+            Configuration.ORIENTATION_PORTRAIT -> {
+                setContentView(R.layout.activity_main)
                 supportFragmentManager.beginTransaction()
-                        .replace(R.id.containerFrameLayout, bookListFragment, BookListFragment::class.java.simpleName)
+                        .replace(R.id.containerFrameLayout, BookListFragment(), BookListFragment::class.java.simpleName)
                         .commit()
             }
-
-            override fun onFailure(call: Call<List<Book>>, t: Throwable) {
-                Log.v("TAG", "error")
+            else -> {
+                setContentView(R.layout.activity_main_landscape)
+                supportFragmentManager.beginTransaction()
+                        .replace(R.id.book_list_fragment, BookListFragment(), BookListFragment::class.java.simpleName)
+                        .commit()
+                val bookDetailFragment = BookDetailFragment()
+                val arguments = Bundle()
+                arguments.putBoolean("selected", false)
+                bookDetailFragment.arguments = arguments
+                supportFragmentManager.beginTransaction()
+                        .replace(R.id.book_detail_fragment, bookDetailFragment, BookDetailFragment::class.java.simpleName)
+                        .commit()
             }
-        })
-
+        }
     }
 
     override fun onClick(book: Book?) {
         val bookDetailFragment = BookDetailFragment()
         val arguments = Bundle()
         arguments.putParcelable("book", book)
+        arguments.putBoolean("selected", true)
         bookDetailFragment.arguments = arguments
-        supportFragmentManager.beginTransaction()
-                .replace(R.id.containerFrameLayout, bookDetailFragment, BookDetailFragment::class.java.simpleName)
-                .commit()
+
+        when(resources.configuration.orientation) {
+            Configuration.ORIENTATION_PORTRAIT -> {
+                supportFragmentManager.beginTransaction()
+                        .addToBackStack(BookListFragment::class.java.simpleName)
+                        .replace(R.id.containerFrameLayout, bookDetailFragment, BookDetailFragment::class.java.simpleName)
+                        .commit()
+            }
+            else -> {
+                supportFragmentManager.beginTransaction()
+                        .replace(R.id.book_detail_fragment, bookDetailFragment, BookDetailFragment::class.java.simpleName)
+                        .commit()
+            }
+        }
+
     }
 }
